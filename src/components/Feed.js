@@ -22,21 +22,16 @@ function Feed() {
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    //need to figure out why it is doing it twice
-    const q = query(collection(db, "posts"));
     async function fetchData() {
+      const q = query(collection(db, "posts"));
       const querySnapshot = await getDocs(q);
-      querySnapshot.docs.forEach((doc) => {
-        setPosts((prevPost) => [
-          ...prevPost,
-          {
-            id: doc.id,
-            name: doc.data().name,
-            message: doc.data().message,
-            description: doc.data().description,
-          },
-        ]);
-      });
+      const newPosts = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().name,
+        message: doc.data().message,
+        description: doc.data().description,
+      }));
+      setPosts(newPosts);
     }
     fetchData();
     console.log(posts);
